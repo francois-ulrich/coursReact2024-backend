@@ -1,0 +1,5 @@
+﻿@sda.backend.minimalapi.ui_HostAddress = https://localhost:7207
+
+GET {{sda.backend.minimalapi.ui_HostAddress}}/weatherforecast
+
+###
