@@ -14,6 +14,7 @@ public class FakeInMemoryGetAllGamesService: IGetAllGamesService
             new Game { Id = 3, DateStart = DateTime.Now, Character = "Thorin" },
             new Game { Id = 4, DateStart = DateTime.Now, Character = "Balin" },
             new Game { Id = 5, DateStart = DateTime.Now, Character = "Dwalin" },
+            new Game { Id = 6, DateStart = DateTime.Now, Character = "Bombur" },
         };
     }
 }
