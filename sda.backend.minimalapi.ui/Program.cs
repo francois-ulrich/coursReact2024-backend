@@ -24,11 +24,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<GameDbContext>(options => {
-    var connectionString = "";
+    var connectionString = builder.Configuration.GetConnectionString("sda.backoffice.database");
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddScoped<IGetAllGamesService, FakeInMemoryGetAllGamesService>();
+builder.Services.AddScoped<IGetAllGamesService, GetAllGamesService>();
 
 var app = builder.Build();
 

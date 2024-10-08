@@ -1,6 +1,8 @@
 ﻿using sda.backend.minimalapi.Core.Games.Models;
 using sda.backend.minimalapi.Core.Games.Interfaces;
 using sda.backend.minimalapi.Core.Games.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.OpenApi;
 namespace sda.backend.minimalapi.ui;
 
 public static class GameEndpoints
@@ -13,6 +15,13 @@ public static class GameEndpoints
         })
         .WithName("GetAllGames")
         .Produces<Game[]>(StatusCodes.Status200OK);
+
+        //routes.MapGet("/api/Game", async (IGetAllGamesService service) =>
+        //{
+        //    return await service.GetAll();
+        //})
+        //.WithName("GetAllGames")
+        //.Produces<Game[]>(StatusCodes.Status200OK);
 
         routes.MapGet("/api/Game/{id}", (int id) =>
         {

@@ -10,6 +10,11 @@ namespace sda.backend.minimalapi.Core.Games.Services.Models
 {
     public class GameDbContext : DbContext
     {
+        public GameDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        {
+
+        }
+
         #region Properties
         public DbSet<Game> Games { get; set; }
         #endregion
