@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
@@ -15,8 +19,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Libs\sda.backend.minimalapi.Core.Games.Models\sda.backend.minimalapi.Core.Games.Models.csproj" />
+    <ProjectReference Include="..\sda.backend.minimalapi.Core.Auth.Models\sda.backend.minimalapi.Core.Auth.Models.csproj" />
     <ProjectReference Include="..\sda.backend.minimalapi.Core.Games.Interfaces\sda.backend.minimalapi.Core.Games.Interfaces.csproj" />
     <ProjectReference Include="..\sda.backend.minimalapi.Core.Games.Services\sda.backend.minimalapi.Core.Games.Services.csproj" />
+    <ProjectReference Include="..\Services\sda.backend.minimalapi.Core.Auth.Services.csproj" />
   </ItemGroup>
 
 </Project>

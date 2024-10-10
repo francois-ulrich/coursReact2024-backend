@@ -4,6 +4,8 @@ using sda.backend.minimalapi.Core.Games.Models;
 using sda.backend.minimalapi.Core.Games.Services;
 using sda.backend.minimalapi.Core.Games.Services.Models;
 using Microsoft.EntityFrameworkCore;
+using sda.backend.minimalapi.Core.Auth.Models;
+using Microsoft.AspNetCore.Identity;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -23,10 +25,25 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("sda.backoffice.database");
+
+// Games
 builder.Services.AddDbContext<GameDbContext>(options => {
-    var connectionString = builder.Configuration.GetConnectionString("sda.backoffice.database");
     options.UseSqlServer(connectionString);
 });
+
+// Authentication
+builder.Services.AddDbContext<AuthenticationDbContext>(options => {
+    options.UseSqlServer(connectionString, b=> b.MigrationsAssembly("sda.backend.minimalapi.ui"));
+});
+
+builder.Services.AddIdentityCore<AuthenticationUser>()
+    .AddEntityFrameworkStores<AuthenticationDbContext>()
+    .AddApiEndpoints();
+
+builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+builder.Services.AddAuthorizationBuilder();
 
 builder.Services.AddScoped<IGetAllGamesService, GetAllGamesService>();
 
@@ -44,6 +61,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapIdentityApi<AuthenticationUser>();
 app.MapGameEndpoints();
 
 app.Run();
