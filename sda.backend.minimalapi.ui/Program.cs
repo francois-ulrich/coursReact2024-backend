@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
     policy =>
     {
-        policy.WithOrigins("http://localhost:5173");
+        policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
@@ -29,13 +29,15 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("sda.backoffice.database");
 
 // Games
-builder.Services.AddDbContext<GameDbContext>(options => {
+builder.Services.AddDbContext<GameDbContext>(options =>
+{
     options.UseSqlServer(connectionString);
 });
 
 // Authentication
-builder.Services.AddDbContext<AuthenticationDbContext>(options => {
-    options.UseSqlServer(connectionString, b=> b.MigrationsAssembly("sda.backend.minimalapi.ui"));
+builder.Services.AddDbContext<AuthenticationDbContext>(options =>
+{
+    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("sda.backend.minimalapi.ui"));
 });
 
 builder.Services.AddIdentityCore<AuthenticationUser>()
