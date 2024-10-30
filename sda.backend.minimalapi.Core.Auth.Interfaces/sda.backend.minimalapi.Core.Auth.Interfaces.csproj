@@ -7,11 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sda.backend.minimalapi.Core.Auth.Interfaces\sda.backend.minimalapi.Core.Auth.Interfaces.csproj" />
     <ProjectReference Include="..\sda.backend.minimalapi.Core.Auth.Models\sda.backend.minimalapi.Core.Auth.Models.csproj" />
   </ItemGroup>
 
