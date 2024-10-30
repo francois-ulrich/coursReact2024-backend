@@ -123,7 +123,6 @@ app.UseHttpsRedirection();
 
 //app.MapIdentityApi<AuthenticationUser>();
 app.MapGameEndpoints();
-
 app.MapPendingUserEndpoints();
 
 app.Run();

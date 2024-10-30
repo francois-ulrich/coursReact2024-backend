@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OpenApi;
 using sda.backend.minimalapi.Core.Auth.Models;
 namespace sda.backend.minimalapi.ui;
@@ -7,41 +8,28 @@ public static class PendingUserEndpoints
 {
     public static void MapPendingUserEndpoints (this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/PendingUser").WithTags(nameof(PendingUser));
+        var group = routes.MapGroup("/api/auth").WithTags(nameof(PendingUser));
 
-        group.MapGet("/", () =>
+        group.MapPost("/", async (PendingUser model, UserManager<AuthenticationUser> userManager) =>
         {
-            return new [] { new PendingUser() };
-        })
-        .WithName("GetAllPendingUsers")
-        .WithOpenApi();
+            IResult result = TypedResults.BadRequest();
 
-        group.MapGet("/{id}", (int id) =>
-        {
-            //return new PendingUser { ID = id };
-        })
-        .WithName("GetPendingUserById")
-        .WithOpenApi();
-
-        group.MapPut("/{id}", (int id, PendingUser input) =>
-        {
-            return TypedResults.NoContent();
-        })
-        .WithName("UpdatePendingUser")
-        .WithOpenApi();
-
-        group.MapPost("/", (PendingUser model) =>
-        {
             //return TypedResults.Created($"/api/PendingUsers/{model.ID}", model);
+            var pendingUserResult = await userManager.CreateAsync(new AuthenticationUser()
+            {
+                UserName = model.UserName,
+                Id = model.Email,
+                Email= model.Email,
+            }, model.Password);
+
+            if (pendingUserResult.Succeeded)
+            {
+                result = TypedResults.Created("/api/auth", model);
+            }
+
+            return result;
         })
         .WithName("CreatePendingUser")
-        .WithOpenApi();
-
-        group.MapDelete("/{id}", (int id) =>
-        {
-            //return TypedResults.Ok(new PendingUser { ID = id });
-        })
-        .WithName("DeletePendingUser")
         .WithOpenApi();
     }
 }
