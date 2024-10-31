@@ -104,10 +104,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+});
+
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IGetAllGamesService, GetAllGamesService>();
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Add CORS use
 app.UseCors(MyAllowSpecificOrigins);
@@ -124,5 +134,7 @@ app.UseHttpsRedirection();
 //app.MapIdentityApi<AuthenticationUser>();
 app.MapGameEndpoints();
 app.MapPendingUserEndpoints();
+
+app.MapLoginUserEndpoints();
 
 app.Run();

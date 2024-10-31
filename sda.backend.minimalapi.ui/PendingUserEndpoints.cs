@@ -8,7 +8,7 @@ public static class PendingUserEndpoints
 {
     public static void MapPendingUserEndpoints (this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/auth").WithTags(nameof(PendingUser));
+        var group = routes.MapGroup("/api/auth/register").WithTags(nameof(PendingUser));
 
         group.MapPost("/", async (PendingUser model, UserManager<AuthenticationUser> userManager) =>
         {
@@ -24,7 +24,7 @@ public static class PendingUserEndpoints
 
             if (pendingUserResult.Succeeded)
             {
-                result = TypedResults.Created("/api/auth", model);
+                result = TypedResults.Created("/api/auth/register", model);
             }
 
             return result;

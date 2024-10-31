@@ -14,6 +14,7 @@ public static class GameEndpoints
             return service.GetAll();
         })
         .WithName("GetAllGames")
+        .RequireAuthorization()
         .Produces<Game[]>(StatusCodes.Status200OK);
 
         //routes.MapGet("/api/Game", async (IGetAllGamesService service) =>

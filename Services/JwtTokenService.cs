@@ -51,17 +51,19 @@ namespace sda.backend.minimalapi.Core.Auth.Services
 
         public List<Claim> CreateClaims(AuthenticationUser user)
         {
-            var jwtSub = _configuration.GetSection("Jwt")["RegisteredClaimNamesSub"];
+            //var jwtSub = _configuration.GetSection("Jwt")["RegisteredClaimNamesSub"];
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, jwtSub!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
+                new (JwtRegisteredClaimNames.Sub, user.Id),
+                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new (JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
                 
-                //new Claim(ClaimTypes.NameIdentifier, userId),
+                //new Claim(ClaimTypes.NameIdentifier, user.Id),
                 //new Claim(ClaimTypes.Name, username),
                 //new Claim(ClaimTypes.Role, role)
+
+                new (ClaimTypes.Email, user.Email!)
             };
 
             return claims;
