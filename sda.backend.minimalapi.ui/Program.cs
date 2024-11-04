@@ -23,7 +23,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
     policy =>
     {
-        policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+        policy.WithOrigins("http://localhost:5173")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
@@ -91,6 +93,7 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(options =>
 {
     options.IncludeErrorDetails = true;
+
     options.TokenValidationParameters = new TokenValidationParameters()
     {
         ClockSkew = TimeSpan.Zero,
@@ -101,6 +104,19 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtConfig["ValidIssuer"],
         ValidAudience = jwtConfig["ValidAudience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["SymmetricSecurityKey"]!))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = ctx =>
+        {
+            ctx.Request.Cookies.TryGetValue("accessToken", out var accessToken);
+
+            if (!string.IsNullOrEmpty(accessToken))
+                ctx.Token = accessToken;
+
+            return Task.CompletedTask;
+        }
     };
 });
 
