@@ -21,7 +21,6 @@ public static class LoginUserEndpoints
                 return result;
 
 
-
             var isPasswordValid = await userManager.CheckPasswordAsync(user, model.Password);
 
             if (!isPasswordValid)
@@ -34,8 +33,8 @@ public static class LoginUserEndpoints
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(30)
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(30),
             });
 
             result = TypedResults.Ok(new

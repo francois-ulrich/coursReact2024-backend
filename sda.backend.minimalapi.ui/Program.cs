@@ -13,19 +13,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var allowSpecificOrigin = "AllowSpecificOrigin";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    options.AddPolicy(allowSpecificOrigin,
     policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("https://localhost:5173")
         .AllowAnyHeader()
-        .AllowAnyMethod();
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
@@ -136,7 +137,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Add CORS use
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(allowSpecificOrigin);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
