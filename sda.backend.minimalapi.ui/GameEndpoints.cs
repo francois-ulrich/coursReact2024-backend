@@ -3,7 +3,10 @@ using sda.backend.minimalapi.Core.Games.Interfaces;
 using sda.backend.minimalapi.Core.Games.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
+using sda.backend.minimalapi.Core.Games.Services.Models;
+
 namespace sda.backend.minimalapi.ui;
+
 
 public static class GameEndpoints
 {
@@ -16,13 +19,6 @@ public static class GameEndpoints
         .WithName("GetAllGames")
         .RequireAuthorization()
         .Produces<Game[]>(StatusCodes.Status200OK);
-
-        //routes.MapGet("/api/Game", async (IGetAllGamesService service) =>
-        //{
-        //    return await service.GetAll();
-        //})
-        //.WithName("GetAllGames")
-        //.Produces<Game[]>(StatusCodes.Status200OK);
 
         routes.MapGet("/api/Game/{id}", (int id) =>
         {
@@ -38,11 +34,15 @@ public static class GameEndpoints
         .WithName("UpdateGame")
         .Produces(StatusCodes.Status204NoContent);
 
-        routes.MapPost("/api/Game/", (Game model) =>
+        routes.MapPost("/api/Game/", async (Game game, GameDbContext db) =>
         {
-            //return Results.Created($"/api/Games/{model.ID}", model);
+            db.Games.Add(game);
+            await db.SaveChangesAsync();
+
+            return Results.Created($"/api/Games/{game.Id}", game);
         })
         .WithName("CreateGame")
+        .RequireAuthorization()
         .Produces<Game>(StatusCodes.Status201Created);
 
         routes.MapDelete("/api/Game/{id}", (int id) =>

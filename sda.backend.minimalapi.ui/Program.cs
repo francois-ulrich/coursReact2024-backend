@@ -20,14 +20,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Configure CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(allowSpecificOrigin,
-    policy =>
-    {
-        policy.WithOrigins("https://localhost:5173")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
-    });
+    options.AddPolicy(allowSpecificOrigin, policy => policy
+        .WithOrigins("https://localhost:5173")
+            .AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 });
 
 // Add services to the container.
@@ -133,11 +130,10 @@ builder.Services.AddScoped<IGetAllGamesService, GetAllGamesService>();
 
 var app = builder.Build();
 
+app.UseHttpsRedirection();
+app.UseCors(allowSpecificOrigin);
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Add CORS use
-app.UseCors(allowSpecificOrigin);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -146,12 +142,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 //app.MapIdentityApi<AuthenticationUser>();
 app.MapGameEndpoints();
 app.MapPendingUserEndpoints();
 
-app.MapLoginUserEndpoints();
+app.MapAuthEndpoints();
 
 app.Run();
