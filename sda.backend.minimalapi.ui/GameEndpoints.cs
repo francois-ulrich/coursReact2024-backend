@@ -33,8 +33,16 @@ public static class GameEndpoints
         .RequireAuthorization()
         .Produces<Game>(StatusCodes.Status200OK);
 
-        routes.MapPost("/api/Game/", async (Game game, GameDbContext db) =>
+        routes.MapPost("/api/Game/", async (GameDto gameDto, GameDbContext db) =>
         {
+            var game = new Game
+            {
+                Name = gameDto.Name,
+                CharacterName = gameDto.CharacterName,
+                DateStart = gameDto.DateStart,
+                DateEnd = gameDto.DateEnd
+            };
+
             db.Games.Add(game);
             await db.SaveChangesAsync();
 
@@ -44,17 +52,17 @@ public static class GameEndpoints
         .RequireAuthorization()
         .Produces<Game>(StatusCodes.Status201Created);
 
-        routes.MapPut("/api/Game/{id}", async (int id, Game updatedGame, GameDbContext db) =>
+        routes.MapPut("/api/Game/{id}", async (int id, GameDto gameDto, GameDbContext db) =>
         {
             var game = await db.Games.FindAsync(id);
 
             if (game == null)
                 return Results.NotFound();
 
-            game.Name = updatedGame.Name;
-            game.CharacterName = updatedGame.CharacterName;
-            game.DateStart = updatedGame.DateStart;
-            game.DateEnd = updatedGame.DateEnd;
+            game.Name = gameDto.Name;
+            game.CharacterName = gameDto.CharacterName;
+            game.DateStart = gameDto.DateStart;
+            game.DateEnd = gameDto.DateEnd;
 
             await db.SaveChangesAsync();
             return Results.Ok(game);
