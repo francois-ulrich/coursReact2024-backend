@@ -65,7 +65,7 @@ var connectionString = builder.Configuration.GetConnectionString("sda.backoffice
 // Games
 builder.Services.AddDbContext<GameDbContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("sda.backend.minimalapi.ui"));
 });
 
 // Authentication

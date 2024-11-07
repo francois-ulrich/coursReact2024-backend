@@ -15,6 +15,12 @@ namespace sda.backend.minimalapi.Core.Games.Services.Models
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Game>().HasKey(g => g.Id);
+            modelBuilder.Entity<Game>().Property(g => g.Id).ValueGeneratedOnAdd();
+        }
+
         #region Properties
         public DbSet<Game> Games { get; set; }
         #endregion

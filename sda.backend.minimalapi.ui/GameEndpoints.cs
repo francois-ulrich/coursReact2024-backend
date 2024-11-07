@@ -4,9 +4,9 @@ using sda.backend.minimalapi.Core.Games.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using sda.backend.minimalapi.Core.Games.Services.Models;
+using Microsoft.AspNetCore.Builder;
 
 namespace sda.backend.minimalapi.ui;
-
 
 public static class GameEndpoints
 {
@@ -20,19 +20,18 @@ public static class GameEndpoints
         .RequireAuthorization()
         .Produces<Game[]>(StatusCodes.Status200OK);
 
-        routes.MapGet("/api/Game/{id}", (int id) =>
+        routes.MapGet("/api/Game/{id}", async (int id, GameDbContext db) =>
         {
-            //return new Game { ID = id };
+            var game = await db.Games.FindAsync(id);
+
+            if (game != null)
+                return Results.Ok(game);
+
+            return Results.NotFound();
         })
         .WithName("GetGameById")
+        .RequireAuthorization()
         .Produces<Game>(StatusCodes.Status200OK);
-
-        routes.MapPut("/api/Game/{id}", (int id, Game input) =>
-        {
-            return Results.NoContent();
-        })
-        .WithName("UpdateGame")
-        .Produces(StatusCodes.Status204NoContent);
 
         routes.MapPost("/api/Game/", async (Game game, GameDbContext db) =>
         {
@@ -45,11 +44,38 @@ public static class GameEndpoints
         .RequireAuthorization()
         .Produces<Game>(StatusCodes.Status201Created);
 
-        routes.MapDelete("/api/Game/{id}", (int id) =>
+        routes.MapPut("/api/Game/{id}", async (int id, Game updatedGame, GameDbContext db) =>
         {
-            //return Results.Ok(new Game { ID = id });
+            var game = await db.Games.FindAsync(id);
+
+            if (game == null)
+                return Results.NotFound();
+
+            game.Name = updatedGame.Name;
+            game.CharacterName = updatedGame.CharacterName;
+            game.DateStart = updatedGame.DateStart;
+            game.DateEnd = updatedGame.DateEnd;
+
+            await db.SaveChangesAsync();
+            return Results.Ok(game);
+        })
+        .WithName("UpdateGame")
+        .RequireAuthorization()
+        .Produces(StatusCodes.Status204NoContent);
+
+        routes.MapDelete("/api/Game/{id}", async (int id, GameDbContext db) =>
+        {
+            var game = await db.Games.FindAsync(id);
+
+            if (game == null)
+                return Results.NotFound();
+
+            db.Games.Remove(game);
+            await db.SaveChangesAsync();
+            return Results.NoContent();
         })
         .WithName("DeleteGame")
+        .RequireAuthorization()
         .Produces<Game>(StatusCodes.Status200OK);
     }
 }
