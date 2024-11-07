@@ -11,6 +11,25 @@ public static class AuthEndpoints
     {
         var group = routes.MapGroup("/api/auth").WithTags(nameof(LoginUser));
 
+        group.MapGet("/me", async (UserManager <AuthenticationUser> userManager, HttpContext httpContext) =>
+        {
+            var user = await userManager.GetUserAsync(httpContext.User);
+
+            if (user == null)
+            {
+                return Results.Unauthorized();
+            }
+
+            return TypedResults.Ok(new
+            {
+                Email = user.Email,
+                Username = user.UserName,
+            });
+        })
+        .WithName("GetUserInfos")
+        .RequireAuthorization()
+        .WithOpenApi();
+
         group.MapPost("/login", async (LoginUser model, UserManager<AuthenticationUser> userManager, ITokenService tokenService, HttpContext httpContext) =>
         {
             IResult result = Results.BadRequest(new { message = "Invalid username or password" });
@@ -41,7 +60,7 @@ public static class AuthEndpoints
 
             result = TypedResults.Ok(new
             {
-                Email = model.Login,
+                Email = user.Email,
                 Username = user.UserName,
             });
 
