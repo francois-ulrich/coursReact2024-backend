@@ -10,7 +10,7 @@ namespace sda.backend.minimalapi.ui;
 
 public static class GameEndpoints
 {
-    public static void MapGameEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapGameEndpoints(this IEndpointRouteBuilder routes)
     {
         routes.MapGet("/api/Game", (IGetAllGamesService service) =>
         {
@@ -39,6 +39,7 @@ public static class GameEndpoints
             {
                 Name = gameDto.Name,
                 CharacterName = gameDto.CharacterName,
+                Success = gameDto.Success,
                 DateStart = gameDto.DateStart,
                 DateEnd = gameDto.DateEnd
             };
@@ -61,6 +62,7 @@ public static class GameEndpoints
 
             game.Name = gameDto.Name;
             game.CharacterName = gameDto.CharacterName;
+            game.Success = gameDto.Success;
             game.DateStart = gameDto.DateStart;
             game.DateEnd = gameDto.DateEnd;
 
