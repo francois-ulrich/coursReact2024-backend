@@ -126,7 +126,11 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
+builder.Services.AddScoped<IGetGameService, GetGameService>();
 builder.Services.AddScoped<IGetAllGamesService, GetAllGamesService>();
+builder.Services.AddScoped<IPostGameService, PostGameService>();
+builder.Services.AddScoped<IPutGameService, PutGameService>();
+builder.Services.AddScoped<IDeleteGameService, DeleteGameService>();
 
 var app = builder.Build();
 
